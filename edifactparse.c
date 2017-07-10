@@ -7,6 +7,12 @@ size_t read_file(char *filename, char **buf);
 void parse_file(char *buf, size_t buflen);
 void add_segment(char *seg_start, int seglen);
 
+char s_terminator = '\'';
+char separator = '+';
+char component_separator = ':';
+char release = '?';
+char dpoint = '.';
+
 int main(int argc, char *argv[])
 {
     if (argc > 1) {
@@ -60,7 +66,7 @@ void parse_file(char *buf, size_t buflen)
      size_t segstart = 0;
      
      while ( i < buflen) {
-	  if (buf[i] == '\'' && i != 0 && buf[i-1] != '?') {
+	  if (buf[i] == s_terminator && i != 0 && buf[i-1] != release) {
 	       // next seg starts at i+1 if not file end
 	       add_segment(buf + segstart, i - segstart + 1);
 	       segstart = i + 1;
