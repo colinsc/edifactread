@@ -6,6 +6,7 @@ void usage(char *);
 size_t read_file(char *filename, char **buf);
 void parse_file(char *buf, size_t buflen);
 void add_segment(char *seg_start, int seglen);
+void check_service_string_advice(char *buf, size_t buflen);
 
 char s_terminator = '\'';
 char separator = '+';
@@ -62,6 +63,7 @@ size_t read_file(char *filename, char **buf)
 }
 void parse_file(char *buf, size_t buflen)
 {
+     check_service_string_advice(buf, buflen);
      size_t i = 0;
      size_t last = 0;
      size_t segstart = 0;
@@ -87,4 +89,28 @@ void add_segment(char *seg_start, int seglen)
      printf("%s\n", seg);
      free(seg);
      
+}
+
+void check_service_string_advice(char *buf, size_t buflen)
+{
+#define UNA_LENGTH 9
+    if (buflen < UNA_LENGTH) {
+        fprintf(stderr, "Transmission too short to include service string advice\n");
+        exit(EXIT_FAILURE);
+    }
+    char default_una[] = "UNA:+.? '";
+    if (strncmp(default_una, buf, UNA_LENGTH) == 0) {
+        s_terminator = '\'';
+        separator = '+';
+        component_separator = ':';
+        release = '?';
+        dpoint = '.';
+    }
+    else {
+        s_terminator = buf[8];
+        separator = buf[4];
+        component_separator = buf[3];
+        release = buf[6];
+        dpoint = buf[5];
+    }
 }
