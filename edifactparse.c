@@ -62,15 +62,17 @@ size_t read_file(char *filename, char **buf)
 }
 void parse_file(char *buf, size_t buflen)
 {
-     int i = 0;
+     size_t i = 0;
+     size_t last = 0;
      size_t segstart = 0;
      
      while ( i < buflen) {
-	  if (buf[i] == s_terminator && i != 0 && buf[i-1] != release) {
+	  if (buf[i] == s_terminator && i != 0 && buf[last] != release) {
 	       // next seg starts at i+1 if not file end
 	       add_segment(buf + segstart, i - segstart + 1);
 	       segstart = i + 1;
 	  }
+          last = i;
 	  ++i;
      }
      
