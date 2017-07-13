@@ -19,4 +19,10 @@ void append_segment(struct transmission *t, char *segbuf);
 void free_transmission(struct transmission *t);
 void print_transmission(struct transmission *t);
 
+extern char s_terminator;
+extern char separator;
+extern char component_separator;
+extern char release;
+extern char dpoint;
+
 #endif

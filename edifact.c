@@ -6,6 +6,13 @@
 
 #define TAG_LEN   3
 
+char s_terminator = '\'';
+char separator = '+';
+char component_separator = ':';
+char release = '?';
+char dpoint = '.';
+
+
 void segment_tag(char *segment, char *tag)
 {
     // tag needs to point to a buffer at least 4 chars in capacity

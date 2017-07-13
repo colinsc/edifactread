@@ -10,12 +10,6 @@ void parse_file(char *buf, size_t buflen);
 void add_segment(struct transmission *trans, char *seg_start, int seglen);
 void check_service_string_advice(char *buf, size_t buflen);
 
-char s_terminator = '\'';
-char separator = '+';
-char component_separator = ':';
-char release = '?';
-char dpoint = '.';
-
 int main(int argc, char *argv[])
 {
     if (argc > 1) {
