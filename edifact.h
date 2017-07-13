@@ -17,5 +17,6 @@ void segment_tag(char *segment, char *tag);
 struct transmission *initialize_transmission(void);
 void append_segment(struct transmission *t, char *segbuf);
 void free_transmission(struct transmission *t);
+void print_transmission(struct transmission *t);
 
 #endif

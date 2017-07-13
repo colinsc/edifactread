@@ -7,7 +7,7 @@
 void usage(char *);
 size_t read_file(char *filename, char **buf);
 void parse_file(char *buf, size_t buflen);
-void add_segment(char *seg_start, int seglen);
+void add_segment(struct transmission *trans, char *seg_start, int seglen);
 void check_service_string_advice(char *buf, size_t buflen);
 
 char s_terminator = '\'';
@@ -69,27 +69,30 @@ void parse_file(char *buf, size_t buflen)
      size_t i = 0;
      size_t last = 0;
      size_t segstart = 0;
+
+     struct transmission *t;
+     t = initialize_transmission();
      
      while ( i < buflen) {
 	  if (buf[i] == s_terminator && i != 0 && buf[last] != release) {
 	       // next seg starts at i+1 if not file end
-	       add_segment(buf + segstart, i - segstart + 1);
+	       add_segment(t, buf + segstart, i - segstart + 1);
 	       segstart = i + 1;
 	  }
           last = i;
 	  ++i;
      }
+     print_transmission(t);
+     free_transmission(t);
      
 }
 
-void add_segment(char *seg_start, int seglen)
+void add_segment(struct transmission *trans, char *seg_start, int seglen)
 {
      char *seg;
 
      seg = strndup(seg_start, seglen);
-
-     printf("%s\n", seg);
-     free(seg);
+     append_segment(trans, seg);
      
 }
 

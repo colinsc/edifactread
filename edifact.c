@@ -33,6 +33,10 @@ struct transmission *initialize_transmission(void)
 void append_segment(struct transmission *t, char *segbuf)
 {
     //TBD check for malformed lengh segbuf must be at least 3 chars
+    if (strncmp(segbuf,"UNH",TAG_LEN)==0) {
+        t->message_count++;
+        // msg type should be first component of second element
+    }
     struct list_entry *ptr;
 
     if ((ptr = malloc(sizeof(struct list_entry))) == NULL) {
@@ -44,9 +48,13 @@ void append_segment(struct transmission *t, char *segbuf)
 
     struct list_entry *p;
     p = t->segments;
-    while (p->next != NULL)
-        p = p->next;
-    p->next = ptr;
+    if (p == NULL)
+        t->segments = ptr;
+    else {
+        while (p->next != NULL)
+            p = p->next;
+        p->next = ptr;
+    }
 }
 
 void free_transmission(struct transmission *t)
@@ -61,4 +69,20 @@ void free_transmission(struct transmission *t)
     }
 
     free(t);
+}
+
+/*
+ * print_transmission : dump the raw segments from the transmission to stdout
+ *
+ */
+void print_transmission(struct transmission *t)
+{
+    struct list_entry *s;
+
+    s = t->segments;
+
+    while (s != NULL) {
+        printf("%s\n", s->seg);
+        s = s->next;
+    }
 }
