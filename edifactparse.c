@@ -98,19 +98,11 @@ void check_service_string_advice(char *buf, size_t buflen)
         fprintf(stderr, "Transmission too short to include service string advice\n");
         exit(EXIT_FAILURE);
     }
-    char default_una[] = "UNA:+.? '";
-    if (strncmp(default_una, buf, UNA_LENGTH) == 0) {
-        s_terminator = '\'';
-        separator = '+';
-        component_separator = ':';
-        release = '?';
-        dpoint = '.';
-    }
-    else {
-        s_terminator = buf[8];
-        separator = buf[4];
-        component_separator = buf[3];
-        release = buf[6];
-        dpoint = buf[5];
-    }
+    // This is the default UNA segment "UNA:+.? '";
+    // Set the various separators from the UNA segment
+    component_separator = buf[3];
+    separator           = buf[4];
+    dpoint              = buf[5];
+    release             = buf[6];
+    s_terminator        = buf[8];
 }
