@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "edifact.h"
+
 void usage(char *);
 size_t read_file(char *filename, char **buf);
 void parse_file(char *buf, size_t buflen);

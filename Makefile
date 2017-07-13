@@ -7,6 +7,8 @@ all: $(OBJS)
 
 edifactread: edifactread.c
 
-edifactparse: edifactparse.c
+edifactparse: edifactparse.c edifact.o
+
+edifact.o: edifact.c
 
 
