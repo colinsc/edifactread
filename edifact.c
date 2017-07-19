@@ -13,11 +13,11 @@ char release = '?';
 char dpoint = '.';
 
 
-void segment_tag(char *segment, char *tag)
+char *segment_tag(char *segment, char *tag)
 {
     // tag needs to point to a buffer at least 4 chars in capacity
-    strncpy(tag, segment, TAG_LEN);
     tag[TAG_LEN] = '\0';
+    return strncpy(tag, segment, TAG_LEN);
 }
 
 struct transmission *initialize_transmission(void)
@@ -92,4 +92,45 @@ void print_transmission(struct transmission *t)
         printf("%s\n", s->seg);
         s = s->next;
     }
+}
+
+char *data(char *segbuf, int element, int component)
+{
+     /* for non composite elements the data is returned as component 0
+      *  return ponter to requested element or component or
+      *  NULL if not found
+      */
+     int offset = TAG_LEN + 1;
+     int e =0; // element we are reading
+     int c =0; // component we are reading
+     char *ptr;
+     ptr = segbuf + offset;    // set ptr after first +
+     char *rptr = NULL;
+     if (element == 0 && component == 0)
+         rptr = ptr;
+     while (*ptr) {
+         if (*ptr == separator && *(ptr - 1) != release) {
+             if (rptr)
+                 return strndup(rptr, ptr - rptr);
+
+             ++e;
+             c = 0;
+             if (e == element && component == c)
+                 rptr = ptr + 1;
+         }
+         if (*ptr == component_separator && *(ptr - 1) != release) {
+             ++c;
+             if (rptr)
+                 return strndup(rptr, ptr - rptr);
+             if (e == element && component == c)
+                 rptr = ptr + 1;
+         }
+         ++ptr;
+     }
+     if (rptr) {
+         --ptr;
+         return strndup(rptr, ptr - rptr);
+     }
+
+     return NULL; // No match;
 }
