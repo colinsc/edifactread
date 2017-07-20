@@ -12,6 +12,8 @@ char component_separator = ':';
 char release = '?';
 char dpoint = '.';
 
+void print_parsed(char *s);
+
 
 char *segment_tag(char *segment, char *tag)
 {
@@ -94,6 +96,25 @@ void print_transmission(struct transmission *t)
     }
 }
 
+/*
+ * debug_print_transmission : dump the raw segments from the transmission to stdout
+ * show how we parsed them
+ *
+ */
+void debug_print_transmission(struct transmission *t)
+{
+    struct list_entry *s;
+
+    s = t->segments;
+
+    while (s != NULL) {
+        printf("%s\n", s->seg);
+        print_parsed(s->seg);
+        s = s->next;
+    }
+}
+
+
 char *data(char *segbuf, int element, int component)
 {
      /* for non composite elements the data is returned as component 0
@@ -133,4 +154,32 @@ char *data(char *segbuf, int element, int component)
      }
 
      return NULL; // No match;
+}
+
+void print_parsed(char *s)
+{
+    char tagbuf[4];
+
+    if (segment_tag(s,tagbuf) == NULL) {
+        fprintf(stderr, "segment tag returned an error\n");
+        exit(1);
+    }
+    if (strcmp(tagbuf, "UNA") != 0) {
+        printf("%s\n",tagbuf);
+        int element = 0;
+
+        char *p;
+        while ((p =data(s,element,0)) != NULL) { // loop through elements
+            printf("   %s\n",p);
+            free(p);
+            int component = 1;
+            while ((p=data(s,element,component)) != NULL) { // loop through additional components
+                printf("     %s\n",p);
+                free(p);
+                ++component;
+            }
+            ++element;
+        }
+
+    }
 }

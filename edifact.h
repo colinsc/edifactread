@@ -18,6 +18,7 @@ struct transmission *initialize_transmission(void);
 void append_segment(struct transmission *t, char *segbuf);
 void free_transmission(struct transmission *t);
 void print_transmission(struct transmission *t);
+void debug_print_transmission(struct transmission *t);
 char *data(char *segbuf, int element, int component);
 
 extern char s_terminator;

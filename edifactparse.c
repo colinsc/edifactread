@@ -76,7 +76,8 @@ void parse_file(char *buf, size_t buflen)
           last = i;
 	  ++i;
      }
-     print_transmission(t);
+     //print_transmission(t);
+     debug_print_transmission(t);
      free_transmission(t);
      
 }
