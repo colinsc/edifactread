@@ -10,15 +10,21 @@ void parse_file(char *buf, size_t buflen);
 void add_segment(struct transmission *trans, char *seg_start, int seglen);
 void check_service_string_advice(char *buf, size_t buflen);
 
+static int debug = 0;   // governs format of output
+
 int main(int argc, char *argv[])
 {
     if (argc > 1) {
 	 for (int i = 1; i < argc; i++) {
-	     char *buf = NULL;
-	     size_t filelen;
-	     filelen = read_file(argv[i], &buf);
-	     parse_file(buf, filelen);
-             free(buf);
+             if (strcmp(argv[i],"-d") == 0)
+                 debug = 1;
+             else {
+                 char *buf = NULL;
+                 size_t filelen;
+                 filelen = read_file(argv[i], &buf);
+                 parse_file(buf, filelen);
+                 free(buf);
+             }
 	 }
     }
     else {
@@ -30,7 +36,7 @@ int main(int argc, char *argv[])
 
 void usage(char *program_name)
 {
-    printf("Usage: %s [filename ..]\n", program_name);
+    printf("Usage: %s [-d] [filename ..]\n  -d print component per line (default is segment\n", program_name);
 }
 
 size_t read_file(char *filename, char **buf)
@@ -76,8 +82,10 @@ void parse_file(char *buf, size_t buflen)
           last = i;
 	  ++i;
      }
-     //print_transmission(t);
-     debug_print_transmission(t);
+     if (debug)
+         debug_print_transmission(t);
+     else
+         print_transmission(t);
      free_transmission(t);
      
 }
