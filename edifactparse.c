@@ -10,7 +10,7 @@ void parse_file(char *buf, size_t buflen);
 void add_segment(struct transmission *trans, char *seg_start, int seglen);
 void check_service_string_advice(char *buf, size_t buflen);
 
-enum output_fmt {SEGMENT_PER_LINE, COMPONENT_PER_LINE};
+enum output_fmt {SEGMENT_PER_LINE, COMPONENT_PER_LINE, DOCUMENTED};
 static enum output_fmt output_format = SEGMENT_PER_LINE;   // governs format of output
 
 int main(int argc, char *argv[])
@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
 	 for (int i = 1; i < argc; i++) {
              if (strcmp(argv[i],"-d") == 0)
                  output_format = COMPONENT_PER_LINE;
+             else if (strcmp(argv[i],"-D") == 0)
+                 output_format = DOCUMENTED;
              else {
                  char *buf = NULL;
                  size_t filelen;
@@ -84,6 +86,8 @@ void parse_file(char *buf, size_t buflen)
 	  ++i;
      }
      if (output_format == COMPONENT_PER_LINE)
+         debug_print_transmission(t);
+     else if (output_format == DOCUMENTED)
          debug_print_transmission(t);
      else
          print_transmission(t);
